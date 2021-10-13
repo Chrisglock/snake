@@ -4,6 +4,18 @@ import pygame, sys, time, random
 
 
 
+def win():
+    my_font = pygame.font.SysFont('times new roman', 90)
+    game_over_surface = my_font.render('Ganaste!', True, green)
+    game_over_rect = game_over_surface.get_rect()
+    game_over_rect.midtop = (frame_size_x/2, frame_size_y/6)
+    game_window.fill(black)
+    game_window.blit(game_over_surface, game_over_rect)
+    show_score(0, green, 'consolas', 20)
+    pygame.display.flip()
+    time.sleep(3)
+    pygame.quit()
+    sys.exit()
 
 # Game Over
 def game_over():
@@ -81,18 +93,25 @@ while True:
     # FPS (frames per second) controller
     fps_controller = pygame.time.Clock()
 
-
-    # Game variables
-    snake_pos = [100, 50]
-    snake_body = [[100, 50], [100-10, 50], [100-(2*10), 50]]
-
-    food_pos = [random.randrange(1, (frame_size_x//10)) * 10, random.randrange(1, (frame_size_y//10)) * 10]
     food_spawn = True
 
     direction = 'RIGHT'
     change_to = direction
 
     score = 0
+
+    # Game variables
+    snake_pos = [100, 50]
+    snake_body = [[100, 50], [100-10, 50], [100-(2*10), 50]]
+
+    food_pos = [random.randrange(1, (frame_size_x//10)) * 10, random.randrange(1, (frame_size_y//10)) * 10]
+
+
+    # Spawning food on the screen
+    if not food_spawn:
+        food_pos = [random.randrange(1, (frame_size_x//10)) * 10, random.randrange(1, (frame_size_y//10)) * 10]
+
+
     # Main logic
     game=0
     while game==0:
@@ -172,7 +191,8 @@ while True:
             if snake_pos[0] == block[0] and snake_pos[1] == block[1]:
                 game_over()
                 game=1
-
+            if score==10:
+                win()
         show_score(1, white, 'consolas', 20)
         # Refresh game screen
         pygame.display.update()
